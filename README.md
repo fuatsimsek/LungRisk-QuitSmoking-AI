@@ -52,15 +52,39 @@ Secure Login and Registration pages with modern UI.
 ## 🧠 AI Models Used
 
 ### 1. Lung Cancer Risk
-- **Model**: Multinomial **Logistic Regression** (scikit-learn).
-- **Technique**: Class weighting used for balanced predictions across risk levels.
-- **Input**: Age (StandardScaled), lifestyle factors like smoking and pollution (MinMaxScaled).
-- **Output**: Multi-class classification (Low, Medium, High).
+
+**Model pipeline & training**
+- **Model**: Logistic Regression (Multinomial).
+- **Technique**: Class weighting for balanced predictions; Age (StandardScaler), other features (MinMaxScaler).
+- **Output**: Multi-class (Low, Medium, High).
+
+**Model performance (30% hold-out test set)**
+
+| Metric | Value |
+|--------|--------|
+| Accuracy | **94.67%** |
+| Precision (macro) | 94.49% |
+| Recall (macro) | 94.47% |
+| F1-score (macro) | 94.46% |
+
+---
 
 ### 2. Quit-Smoking Likelihood
-- **Model**: **Random Forest Classifier** with probability calibration (`CalibratedClassifierCV`).
-- **Technique**: **SMOTE** used to handle class imbalance; Mode/Median imputation for missing NHIS data.
-- **Output**: Probability score (0-100%) and binary decision (Likely/Unlikely).
+
+**Model pipeline & training**
+- **Model**: Calibrated Random Forest (Sigmoid calibration).
+- **Technique**: SMOTE for class imbalance; Mode/Median imputation for missing NHIS data.
+- **Output**: Probability (0–100%) and binary decision (Likely/Unlikely). Calibrated RF was chosen as the production model for the best balance.
+
+**Model performance**
+
+| Metric | Calibrated RF (production) | RF (normal) |
+|--------|----------------------------|-------------|
+| Accuracy | **91.1%** | — |
+| ROC AUC | **0.978** | — |
+| Precision (macro) | 91.3% | — |
+| Recall (macro) | 91.1% | — |
+| F1-score (macro) | 91.1% | — |
 
 ---
 
@@ -68,7 +92,7 @@ Secure Login and Registration pages with modern UI.
 
 - **Backend**: Django 5.x, Django REST Framework
 - **Database**: PostgreSQL
-- **ML Engine**: Scikit-learn, Pandas, Numpy, Joblib
+- **ML Engine**: Scikit-learn, Pandas, Numpy, Joblib, imbalanced-learn
 - **Frontend**: Server-rendered HTML (Dark Theme), Vanilla JS
 - **Authentication**: Session-based auth
 
@@ -77,26 +101,31 @@ Secure Login and Registration pages with modern UI.
 ## ⚙️ Installation and Run
 
 ### 1. Database Setup
-Ensure PostgreSQL is running and create a database:
+Ensure PostgreSQL is running and create a database (e.g. `lungrisk_db`). You will use this name in `config/settings.py`.
 
 ```sql
 CREATE DATABASE lungrisk_db;
-2. Configure Settings
-Open config/settings.py and update the DATABASES section:
+```
 
-Python
+### 2. Configure Settings
+Open `config/settings.py` and set DATABASES to your real values (database name, user, password):
+
+```python
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'lungrisk_db',
-        'USER': 'your_postgres_user',
-        'PASSWORD': 'your_postgres_password',
+        'NAME': 'your_db_name',       # e.g. lungrisk_db
+        'USER': 'your_db_user',
+        'PASSWORD': 'your_db_password',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
-3. Install & Start
-Bash
+```
+
+### 3. Install & Start
+
+```bash
 # Create virtual env
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
@@ -109,4 +138,6 @@ python manage.py migrate
 
 # Run server
 python manage.py runserver
+```
+
 Visit http://127.0.0.1:8000/ to start using the app.
