@@ -1,8 +1,6 @@
-# LungRisk & QuitSmoking AI
+<img width="789" height="587" alt="cancern2" src="https://github.com/user-attachments/assets/99b21716-d3bb-4595-abaf-7982f9729d99" /># LungRisk & QuitSmoking AI
 
 A dual-purpose web application that assesses **lung cancer risk** and **quit-smoking likelihood** using machine learning models. Users can sign up, submit health and lifestyle data, and receive instant risk analysis with personalized suggestions.
-
-![Dashboard Result](screenshots/cancern3.jpg)
 
 ---
 
@@ -10,31 +8,50 @@ A dual-purpose web application that assesses **lung cancer risk** and **quit-smo
 
 This application serves two main predictive functions:
 
-1.  **Lung Cancer Risk Assessment**: Predicts the risk level (**LOW / MEDIUM / HIGH**) based on factors like age, air pollution, fatigue, genetic risk, and alcohol use.
-2.  **Quit-Smoking Likelihood**: Predicts the probability of a user successfully quitting smoking based on NHIS-style inputs (motivation, dependency, past attempts, etc.).
+1.  **🫁 Lung Cancer Risk Assessment**: Predicts the risk level (**LOW / MEDIUM / HIGH**) based on factors like age, air pollution, fatigue, genetic risk, and alcohol use.
+2.  **🚬 Quit-Smoking Likelihood**: Predicts the probability of a user successfully quitting smoking based on NHIS-style inputs (motivation, dependency, past attempts, etc.).
 
 ---
 
 ## 📸 Screenshots
 
-### 1. Lung Cancer Risk Form
+### 1. Lung Cancer Analysis Module
 Users input their health data via interactive sliders to calculate cancer risk.
-![Lung Cancer Risk Form](screenshots/cancern2.jpg)
 
-### 2. Quit Smoking Likelihood Form
-A specialized form predicting the probability of successfully quitting based on psychological and physical habits.
-![Quit Smoking Form](screenshots/smoking2.png)
-
-### 3. Results Dashboard
-Instant prediction results with probability distribution and tailored advice.
-![Results Dashboard](screenshots/cancern3.jpg)
-
-### 4. Authentication
-Secure Login and Registration pages.
-
-| Login Screen | Register Screen |
+| **Input Form** | **Result Dashboard** |
 | :---: | :---: |
-| ![Login](screenshots/Login.png) | ![Register](screenshots/register.png) |
+| ![Lung Risk Form]<img width="789" height="587" alt="cancern2" src="https://github.com/user-attachments/assets/faa02deb-92cc-4c66-9ee4-c4429e69b8a4" />
+ | ![Lung Risk Result]<img width="842" height="383" alt="cancern3" src="https://github.com/user-attachments/assets/43ce8b48-2f70-4763-b1d4-26fc4faaadba" />
+ |
+
+### 2. Quit Smoking Analysis Module
+A specialized form predicting the probability of successfully quitting based on psychological and physical habits.
+
+| **Input Form** | **Result Dashboard** |
+| :---: | :---: |
+| ![Quit Form]<img width="744" height="445" alt="smoking2" src="https://github.com/user-attachments/assets/f084ad51-3cae-4dc3-99cd-29c63cdf0884" />
+ | ![Quit Result]<img width="808" height="434" alt="smoking3" src="https://github.com/user-attachments/assets/fe0d9c00-ddcd-4045-ac65-e754698918a2" />
+ |
+
+### 3. Authentication
+Secure Login and Registration pages with modern UI.
+
+| **Login Screen** | **Register Screen** |
+| :---: | :---: |
+| ![Login]<img width="343" height="323" alt="Login" src="https://github.com/user-attachments/assets/33ef5c67-c38f-4006-9cd5-e0988e9bce40" />
+ | ![Register]<img width="482" height="457" alt="register" src="https://github.com/user-attachments/assets/dbb2b1be-f832-4803-acdc-af9298a7f13b" />
+ |
+
+---
+
+## ⚠️ Important: Installation Note (Model Extraction)
+
+**CRITICAL STEP:** Because the Random Forest model file is large (>100MB), it is compressed in the repository to avoid GitHub limits. **You must extract it before running the app.**
+
+1.  Navigate to the `ml2/` folder in your project directory.
+2.  Find the file named **`ml2.rar`** (or `.zip`).
+3.  Right-click and select **"Extract Here"**.
+4.  Ensure the file `model_quityrs_rf_calibrated.pkl` appears in the `ml2/` folder.
 
 ---
 
@@ -42,14 +59,14 @@ Secure Login and Registration pages.
 
 ### 1. Lung Cancer Risk
 - **Model**: Multinomial **Logistic Regression** (scikit-learn).
-- **Technique**: Class weighting used for balanced predictions.
-- **Input**: Age (StandardScaled), lifestyle factors (MinMaxScaled).
+- **Technique**: Class weighting used for balanced predictions across risk levels.
+- **Input**: Age (StandardScaled), lifestyle factors like smoking and pollution (MinMaxScaled).
 - **Output**: Multi-class classification (Low, Medium, High).
 
 ### 2. Quit-Smoking Likelihood
 - **Model**: **Random Forest Classifier** with probability calibration (`CalibratedClassifierCV`).
 - **Technique**: **SMOTE** used to handle class imbalance; Mode/Median imputation for missing NHIS data.
-- **Output**: Probability score (0-100%) and binary decision.
+- **Output**: Probability score (0-100%) and binary decision (Likely/Unlikely).
 
 ---
 
@@ -67,6 +84,7 @@ Secure Login and Registration pages.
 
 ### 1. Database Setup
 Ensure PostgreSQL is running and create a database:
+
 ```sql
 CREATE DATABASE lungrisk_db;
 2. Configure Settings
