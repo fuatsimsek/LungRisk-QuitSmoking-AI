@@ -20,27 +20,21 @@ Users input their health data via interactive sliders to calculate cancer risk.
 
 | **Input Form** | **Result Dashboard** |
 | :---: | :---: |
-| ![Lung Risk Form]<img width="789" height="587" alt="cancern2" src="https://github.com/user-attachments/assets/faa02deb-92cc-4c66-9ee4-c4429e69b8a4" />
- | ![Lung Risk Result]<img width="842" height="383" alt="cancern3" src="https://github.com/user-attachments/assets/43ce8b48-2f70-4763-b1d4-26fc4faaadba" />
- |
+| <img src="https://github.com/user-attachments/assets/faa02deb-92cc-4c66-9ee4-c4429e69b8a4" width="450" alt="Lung Risk Form"> | <img src="https://github.com/user-attachments/assets/43ce8b48-2f70-4763-b1d4-26fc4faaadba" width="450" alt="Lung Risk Result"> |
 
 ### 2. Quit Smoking Analysis Module
 A specialized form predicting the probability of successfully quitting based on psychological and physical habits.
 
 | **Input Form** | **Result Dashboard** |
 | :---: | :---: |
-| ![Quit Form]<img width="744" height="445" alt="smoking2" src="https://github.com/user-attachments/assets/f084ad51-3cae-4dc3-99cd-29c63cdf0884" />
- | ![Quit Result]<img width="808" height="434" alt="smoking3" src="https://github.com/user-attachments/assets/fe0d9c00-ddcd-4045-ac65-e754698918a2" />
- |
+| <img src="https://github.com/user-attachments/assets/f084ad51-3cae-4dc3-99cd-29c63cdf0884" width="450" alt="Quit Form"> | <img src="https://github.com/user-attachments/assets/fe0d9c00-ddcd-4045-ac65-e754698918a2" width="450" alt="Quit Result"> |
 
 ### 3. Authentication
 Secure Login and Registration pages with modern UI.
 
 | **Login Screen** | **Register Screen** |
 | :---: | :---: |
-| ![Login]<img width="343" height="323" alt="Login" src="https://github.com/user-attachments/assets/33ef5c67-c38f-4006-9cd5-e0988e9bce40" />
- | ![Register]<img width="482" height="457" alt="register" src="https://github.com/user-attachments/assets/dbb2b1be-f832-4803-acdc-af9298a7f13b" />
- |
+| <img src="https://github.com/user-attachments/assets/33ef5c67-c38f-4006-9cd5-e0988e9bce40" width="300" alt="Login"> | <img src="https://github.com/user-attachments/assets/dbb2b1be-f832-4803-acdc-af9298a7f13b" width="350" alt="Register"> |
 
 ---
 
