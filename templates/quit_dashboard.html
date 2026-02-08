@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quit Smoking Likelihood | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root{
+      --bg:#05060b;
+      --card:#111322;
+      --card-soft:#181b2c;
+      --border:rgba(255,255,255,0.06);
+      --text:#f4f5ff;
+      --muted:#9ba0bd;
+      --low:#20d57a;
+      --medium:#ffb020;
+      --high:#ff4b6a;
+      --pill:#272a3d;
+    }
+
+    body{
+      margin:0;
+      font-family:"Inter",sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(255,0,122,0.16),transparent 50%),
+        radial-gradient(circle at 100% 100%,rgba(67,97,238,0.18),transparent 45%),
+        var(--bg);
+      color:var(--text);
+      padding:20px;
+    }
+
+    .shell{
+      max-width:1080px;
+      margin:0 auto;
+      background:linear-gradient(135deg,#141726,#090a12);
+      border-radius:26px;
+      border:1px solid var(--border);
+      padding:24px;
+      box-shadow:0 24px 80px rgba(0,0,0,0.7);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:2fr 1.2fr;
+      gap:20px;
+      margin-top:24px;
+    }
+
+    .gauge-card{
+      background:var(--card);
+      border-radius:20px;
+      padding:20px;
+      border:1px solid var(--border);
+    }
+
+    .gauge{
+      width:220px;
+      height:110px;
+      border-radius:110px 110px 0 0;
+      overflow:hidden;
+      position:relative;
+      background:conic-gradient(
+        from 180deg,
+        var(--low) 0deg 120deg,
+        var(--medium) 120deg 210deg,
+        var(--high) 210deg 360deg
+      );
+    }
+
+    .needle{
+      position:absolute;
+      width:4px;
+      height:94%;
+      left:50%;
+      bottom:4px;
+      transform-origin:bottom center;
+      background:#fff;
+      z-index:3;
+    }
+
+    .gauge-hub{
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#fff;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      z-index:4;
+    }
+
+    .gauge-inner{
+      position:absolute;
+      inset:18px;
+      background:#05060b;
+      border-radius:90px 90px 0 0;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      padding-bottom:10px;
+      font-weight:700;
+      font-size:16px;
+      z-index:2;
+    }
+
+    .pill{
+      background:var(--pill);
+      padding:6px 10px;
+      border-radius:50px;
+      font-size:12px;
+      display:flex!important;
+      align-items:center;
+      gap:6px;
+      color:var(--muted);
+    }
+
+    .pill span.value{color:var(--text);font-weight:600;}
+    .dot{width:8px;height:8px;border-radius:999px;}
+    .dot.low{background:var(--low);}
+    .dot.medium{background:var(--medium);}
+    .dot.high{background:var(--high);}
+
+    .side-card{
+      background:var(--card);
+      border-radius:20px;
+      padding:16px;
+      border:1px solid var(--border);
+    }
+
+    .side-card ul{margin-top:10px;padding-left:18px;color:var(--muted);}
+
+    .history{
+      background:var(--card-soft);
+      margin-top:22px;
+      border-radius:18px;
+      padding:14px;
+      border:1px solid var(--border);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    th,td{
+      padding:6px 4px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      text-align:center;
+    }
+
+    .btn{
+      padding:10px 16px;
+      border-radius:999px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    .btn-primary{
+      background:linear-gradient(120deg,#ff3d71,#c93aff);
+      color:white;
+    }
+
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.2);
+    }
+
+    @media print {
+      .top-right-buttons,
+      #logoutBtn,
+      .gauge-card .btn {
+        display:none !important;
+      }
+
+      body{
+        background:white !important;
+      }
+
+      .shell{
+        box-shadow:none !important;
+        border:none !important;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="shell">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;">
+    <div>
+      <h1>Quit Smoking Likelihood</h1>
+      <p id="subtitle" class="muted">No prediction yet.</p>
+    </div>
+
+    <div class="top-right-buttons" style="display:flex;gap:10px;">
+      <button class="btn btn-ghost" onclick="window.location.href='/dashboard/';">Cancer risk</button>
+      <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <section class="gauge-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <span class="muted">Last prediction</span>
+        <span id="risk-level" class="muted" style="font-weight:700;">–</span>
+      </div>
+
+      <div style="display:flex;gap:20px;align-items:center;">
+        <div>
+          <div class="pill" style="padding:12px 16px;font-size:16px;">
+            <span class="dot" id="decision-dot"></span>
+            <span id="decision-text">–</span>
+          </div>
+          <div class="muted" style="margin-top:6px;">(Decision: Can quit / Cannot quit)</div>
+          <div class="muted" style="margin-top:6px;" id="prob-text"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="window.location.href='/quit-form/';">New prediction</button>
+        <button class="btn btn-ghost" onclick="window.print();">PDF / Print</button>
+      </div>
+    </section>
+
+    <aside class="side-card">
+      <h3 style="margin:0;font-size:16px;">Suggestions</h3>
+      <ul id="suggest-list"><li>No suggestions yet.</li></ul>
+    </aside>
+  </div>
+
+  <section class="history">
+    <div class="muted">Last 50 predictions</div>
+    <table>
+      <thead>
+      <tr>
+        <th width="140">Date</th>
+        <th width="100">Decision</th>
+        <th width="70">Smoking</th>
+        <th width="80">Alcohol</th>
+        <th width="70">Attempts</th>
+        <th width="80">Age</th>
+        <th width="80">Wants to quit?</th>
+      </tr>
+      </thead>
+      <tbody id="history-body">
+        <tr><td colspan="7">No records.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<script>
+
+// ----------------------------------------------------
+// Yardımcı Fonksiyonlar
+// ----------------------------------------------------
+
+function pct(n){ return (n*100).toFixed(1) + "%"; }
+
+function buildSuggestions(rec){
+  const out=[];
+  const p = rec.probability;
+
+  if(p < 0.4) out.push("Motivation seems low. Try setting small goals.");
+  else if(p < 0.9) out.push("Moderate motivation: Reducing triggers can improve success.");
+  else out.push("You're ready to quit! Set a quit date and get support.");
+
+  if(rec.CIGSDAY >= 10) out.push("Daily cigarette count is high; gradual reduction may help.");
+  if(rec.CSWANTQUIT === 1) out.push("Wanting to quit greatly increases your chance of success.");
+
+  return out;
+}
+
+// ----------------------------------------------------
+// Dashboard Üstüne Tahmin Uygulama
+// ----------------------------------------------------
+
+function applyQuitResult(rec){
+  const p = parseFloat(rec.probability);
+  const canQuit = rec.can_quit === true || rec.can_quit === 1 || rec.can_quit === "true";
+
+  document.getElementById("subtitle").textContent = "Last prediction loaded.";
+  document.getElementById("decision-text").textContent = canQuit ? "Can quit" : "Cannot quit";
+  document.getElementById("decision-dot").className = canQuit ? "dot low" : "dot high";
+  document.getElementById("risk-level").textContent = canQuit ? "CAN QUIT" : "CANNOT QUIT";
+  // Model olasılığını gizle
+  const probText = document.getElementById("prob-text");
+  if(probText) probText.textContent = "";
+
+  const sug = (rec.suggestions && rec.suggestions.length) ? rec.suggestions : buildSuggestions(rec);
+  const ul = document.getElementById("suggest-list");
+  ul.innerHTML = "";
+  sug.forEach(t=>{
+    const li=document.createElement("li");
+    li.textContent=t;
+    ul.appendChild(li);
+  });
+}
+
+// ----------------------------------------------------
+// Son Kayıt + History
+// ----------------------------------------------------
+
+async function loadHistory(){
+  const res = await fetch("/api/quit-smoking-history/");
+  const data = await res.json();
+  const tbody=document.getElementById("history-body");
+  tbody.innerHTML="";
+
+  if(!data.length){
+    tbody.innerHTML = "<tr><td colspan='5'>No records.</td></tr>";
+    return;
+  }
+
+  data.forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML = `
+      <td>${new Date(r.created_at).toLocaleString("en-GB")}</td>
+      <td>${(r.can_quit ? "Can quit" : "Cannot quit")}</td>
+      <td>${r.CIGSDAY}</td>
+      <td>${r.ALCDAYSYR}</td>
+      <td>${r.CSQTRYYR}</td>
+      <td>${r.age ?? "-"}</td>
+      <td>${r.CSWANTQUIT === 1 ? "Yes" : "No"}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function loadLastFromDB(){
+  const res = await fetch("/api/quit-smoking-history/");
+  const data = await res.json();
+  if(data.length > 0) applyQuitResult(data[0]);
+}
+
+// ----------------------------------------------------
+// Init
+// ----------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", ()=>{
+
+  const qp = new URL(window.location.href).searchParams.get("p");
+
+  if(qp) loadLastFromDB();
+  else   loadLastFromDB();
+
+  loadHistory();
+
+  document.getElementById("logoutBtn").onclick = ()=>{
+    sessionStorage.clear();
+    localStorage.clear();
+    window.location.href="/logout/";
+  };
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LungRisk AI | Login</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: 'Inter', system-ui, -apple-system, sans-serif; background: radial-gradient(circle at 20% 20%, rgba(255,0,90,0.15), transparent 30%), radial-gradient(circle at 80% 0%, rgba(111,0,255,0.18), transparent 30%), #0c0c14; color: #e9ecf5; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .card { width: min(420px, 100% - 32px); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 32px 36px; backdrop-filter: blur(12px); box-shadow: 0 20px 60px rgba(0,0,0,0.45); }
+    h1 { margin: 0 0 8px; font-size: 1.5rem; font-weight: 700; }
+    p { margin: 0 0 20px; color: #9aa0b5; font-size: 14px; }
+    form { margin-top: 4px; }
+    label { display: block; margin-bottom: 6px; color: #a8aebd; font-size: 13px; font-weight: 500; }
+    input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #e9ecf5; margin-bottom: 16px; font-size: 15px; transition: border-color 0.2s, box-shadow 0.2s; }
+    input::placeholder { color: rgba(255,255,255,0.35); }
+    input:focus { outline: none; border-color: rgba(201,58,255,0.6); box-shadow: 0 0 0 3px rgba(201,58,255,0.15); }
+    .btn { width: 100%; padding: 12px 14px; margin-top: 4px; border: none; border-radius: 12px; background: linear-gradient(120deg, #ff3d71, #c93aff); color: white; font-weight: 600; font-size: 15px; cursor: pointer; transition: opacity 0.2s, transform 0.05s; }
+    .btn:hover { opacity: 0.95; }
+    .btn:active { transform: scale(0.99); }
+    .muted { color: #9aa0b5; font-size: 14px; }
+    .link { color: #c93aff; text-decoration: none; font-weight: 600; }
+    .link:hover { text-decoration: underline; }
+    .hint { color: #9aa0b5; font-size: 13px; min-height: 18px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Log in</h1>
+    <p class="muted">Sign in with your email and password.</p>
+
+    {% if error %}
+      <div class="hint" style="color:#ff7b92; margin-bottom:10px;">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/login/">
+      {% csrf_token %}
+      <label>Email</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="••••••••" required>
+
+      <button class="btn" type="submit">Log in</button>
+    </form>
+
+    <p class="muted" style="margin-top:12px;">Don't have an account?
+      <a class="link" href="/register/">Sign up</a>
+    </p>
+  </div>
+</body>
+</html>
+

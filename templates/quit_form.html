@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LungRisk AI | Quit Smoking Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root{
+      --bg:#0c0c14;
+      --panel:rgba(255,255,255,0.06);
+      --border:rgba(255,255,255,0.08);
+      --text:#e9ecf5;
+      --muted:#9aa0b5;
+      --primary:#c93aff;
+      --accent:#ff3d71;
+    }
+    body{
+      margin:0;
+      padding:22px;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,0,90,0.15), transparent 30%),
+        radial-gradient(circle at 80% 0%, rgba(111,0,255,0.18), transparent 30%),
+        var(--bg);
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+    }
+    .card{
+      max-width:900px;
+      margin:0 auto;
+      border-radius:22px;
+      padding:26px 26px 30px;
+      border:1px solid var(--border);
+      background:var(--panel);
+      box-shadow:0 20px 60px rgba(0,0,0,0.45);
+      backdrop-filter:blur(14px);
+    }
+    h1{
+      margin:0 0 14px;
+      font-size:26px;
+    }
+    .muted{color:var(--muted);}
+    
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:35px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:14px;
+      font-weight:500;
+    }
+    input[type=number], select{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.07);
+      color:var(--text);
+      font-size:15px;
+    }
+
+    select option{background:#ffffff;color:#000;}
+    select:not(:hover) option:checked{background:#0d6efd;color:#fff;}
+    select:hover option:hover{background:#0d6efd;color:#fff;}
+
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:22px;
+      align-items:center;
+    }
+
+    .btn{
+      padding:13px 20px;
+      border-radius:12px;
+      border:none;
+      cursor:pointer;
+      color:white;
+      font-size:15px;
+      font-weight:700;
+      background:linear-gradient(120deg,var(--accent),var(--primary));
+    }
+    .btn:hover{opacity:0.94;}
+    
+    .hint{
+      font-size:13px;
+      color:var(--muted);
+      min-height:18px;
+      padding-top:4px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="card">
+
+  <h1>Quit Smoking Form</h1>
+  <p class="muted">Fill in the details to calculate your quit likelihood.</p>
+
+  <div class="grid">
+
+    <div>
+      <label>Age</label>
+      <input id="age" type="number" min="14" max="90" value="40">
+      <div class="muted" style="font-size:12px;">14 – 90</div>
+    </div>
+
+    <div>
+      <label>Gender</label>
+      <select id="gender">
+        <option value="1">Male</option>
+        <option value="2">Female</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Education</label>
+      <select id="educ">
+        <option value="1">Primary</option>
+        <option value="2">Middle school</option>
+        <option value="3" selected>High school</option>
+        <option value="4">University</option>
+        <option value="5">Postgraduate</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Alcohol status</label>
+      <select id="alcstat1">
+        <option value="1">None</option>
+        <option value="2" selected>Former</option>
+        <option value="3">Light/Moderate</option>
+        <option value="4">Heavy</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Alcohol days per year</label>
+      <input id="alcdaysyr" type="number" min="0" max="365" value="50">
+    </div>
+
+    <div>
+      <label>Cigarettes per day</label>
+      <input id="cigsday" type="number" min="1" max="100" value="5">
+      <div class="muted" style="font-size:12px;">1 – 100</div>
+    </div>
+
+    <div>
+      <label>Quit attempts in last 12 months</label>
+      <input id="csqtryyr" type="number" min="0" max="12" value="1">
+    </div>
+
+    <div>
+      <label>Do you want to quit?</label>
+      <select id="cswantquit">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Antidepressant use</label>
+      <select id="deprx">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Depressive feeling level</label>
+      <input id="deplevel" type="number" min="0" max="4" value="2">
+      <div class="muted" style="font-size:12px;">0 = none — 4 = very high</div>
+    </div>
+
+    <div>
+      <label>Longest time quit (days)</label>
+      <input id="cigslongfs" type="number" min="0" max="2000" value="0">
+    </div>
+
+    <div>
+      <label>Total quit attempts</label>
+      <input id="quitno" type="number" min="0" max="50" value="0">
+    </div>
+
+  </div>
+
+  <div class="row">
+    <button id="submitBtn" class="btn">Calculate</button>
+    <button class="btn" onclick="window.location.href='/dashboard2/';">Back to menu</button>
+    <div id="hint" class="hint"></div>
+  </div>
+
+</div>
+
+<script>
+async function submitForm(){
+
+  const parsed = {
+    AGE: Number(age.value),
+    GENDER: Number(gender.value),
+    EDUC: Number(educ.value),
+    ALCSTAT1: Number(alcstat1.value),
+    ALCDAYSYR: Number(alcdaysyr.value),
+    CIGSDAY: Number(cigsday.value),
+    CSQTRYYR: Number(csqtryyr.value),
+    CSWANTQUIT: Number(cswantquit.value),
+    DEPRX: Number(deprx.value),
+    DEPFEELEVL: Number(deplevel.value),
+    CIGSLONGFS: Number(cigslongfs.value),
+    QUITNO: Number(quitno.value)
+  };
+
+  // Aralık doğrulama
+  const limits = {
+    AGE:[14,90],
+    GENDER:[1,2],
+    EDUC:[1,5],
+    ALCSTAT1:[1,4],
+    ALCDAYSYR:[0,365],
+    CIGSDAY:[1,100],
+    CSQTRYYR:[0,12],
+    CSWANTQUIT:[0,1],
+    DEPRX:[0,1],
+    DEPFEELEVL:[0,4],
+    CIGSLONGFS:[0,2000],
+    QUITNO:[0,50],
+  };
+
+  for (const [k,[mn,mx]] of Object.entries(limits)){
+    const v = parsed[k];
+    if(Number.isNaN(v) || v < mn || v > mx){
+      hint.textContent = `${k} must be between ${mn} and ${mx}.`;
+      return;
+    }
+  }
+
+  document.getElementById("hint").textContent = "Calculating...";
+
+  try{
+    const res = await fetch("/api/quit-smoking-predict/", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(parsed)
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+      sessionStorage.setItem("quit_inputs", JSON.stringify(parsed));
+      window.location.href = `/dashboard2/?p=${data.probability}`;
+    } else {
+      document.getElementById("hint").textContent = data.error || "An error occurred.";
+    }
+
+  }catch(e){
+    console.error(e);
+    document.getElementById("hint").textContent = "Could not connect to server.";
+  }
+}
+
+document.getElementById("submitBtn").onclick = submitForm;
+</script>
+
+</body>
+</html>

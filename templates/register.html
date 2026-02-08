@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LungRisk AI | Sign up</title>
+  <style>
+    body { margin:0; font-family: 'Inter', system-ui, -apple-system, sans-serif; background: radial-gradient(circle at 20% 20%, rgba(255,0,90,0.15), transparent 30%), radial-gradient(circle at 80% 0%, rgba(111,0,255,0.18), transparent 30%), #0c0c14; color: #e9ecf5; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .card { width: min(420px, 100% - 32px); background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 28px; backdrop-filter: blur(12px); box-shadow: 0 20px 60px rgba(0,0,0,0.45); }
+    h1 { margin:0 0 10px; }
+    p { margin: 0 0 16px; color: #9aa0b5; }
+    label { display:block; margin-bottom:6px; color: #9aa0b5; font-size:14px; }
+    input { width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color:#e9ecf5; margin-bottom:14px; }
+    input:focus { outline:none; border-color:#c93aff; }
+    .btn { width:100%; padding:12px; border:none; border-radius:12px; background: linear-gradient(120deg, #ff3d71, #c93aff); color:white; font-weight:700; cursor:pointer; }
+    .btn:hover { opacity:0.95; }
+    .muted { color:#9aa0b5; font-size:14px; }
+    .link { color:#c93aff; text-decoration:none; font-weight:600; }
+    .hint { color:#9aa0b5; font-size:13px; min-height:18px; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Sign up</h1>
+    <p class="muted">Create your email and password; you'll be signed in automatically.</p>
+
+    {% if error %}
+      <div class="hint" style="color:#ff7b92; margin-bottom:10px;">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/register/">
+      {% csrf_token %}
+      <label>Email</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="••••••••" required>
+
+      <label>Confirm password</label>
+      <input type="password" name="password_confirm" placeholder="••••••••" required>
+
+      <button class="btn" type="submit">Sign up</button>
+    </form>
+
+    <p class="muted" style="margin-top:12px;">Already have an account?
+      <a class="link" href="/login/">Log in</a>
+    </p>
+  </div>
+</body>
+</html>
+

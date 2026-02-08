@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LungRisk AI | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root{
+      --bg:#05060b;
+      --card:#111322;
+      --card-soft:#181b2c;
+      --border:rgba(255,255,255,0.06);
+      --text:#f4f5ff;
+      --muted:#9ba0bd;
+      --low:#20d57a;
+      --medium:#ffb020;
+      --high:#ff4b6a;
+      --pill:#272a3d;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:"Inter",system-ui,-apple-system,sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(255,0,122,0.16),transparent 50%),
+        radial-gradient(circle at 100% 100%,rgba(67,97,238,0.18),transparent 45%),
+        var(--bg);
+      color:var(--text);
+      padding:20px;
+    }
+    .shell{
+      max-width:1080px;
+      margin:0 auto;
+      background:linear-gradient(135deg,#141726,#090a12);
+      border-radius:26px;
+      border:1px solid var(--border);
+      padding:24px 24px 28px;
+      box-shadow:0 24px 80px rgba(0,0,0,0.7);
+    }
+    h1{margin:0 0 6px;font-size:28px;}
+    .muted{color:var(--muted);font-size:14px;}
+    .layout{
+      display:grid;
+      grid-template-columns:2.1fr 1.4fr;
+      gap:20px;
+      margin-top:24px;
+    }
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr;}
+    }
+
+    /* Gauge */
+    .gauge-card{
+      background:var(--card);
+      border-radius:20px;
+      padding:18px 20px 22px;
+      border:1px solid var(--border);
+    }
+    .gauge-wrap{
+      display:flex;
+      gap:24px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .gauge{
+      width:220px;
+      height:110px;
+      border-radius:110px 110px 0 0;
+      overflow:hidden;
+      position:relative;
+      background:conic-gradient(
+        from 180deg,
+        var(--low) 0deg 120deg,
+        var(--medium) 120deg 210deg,
+        var(--high) 210deg 360deg
+      );
+    }
+    .gauge-inner{
+      position:absolute;
+      inset:18px;
+      background:#05060b;
+      border-radius:90px 90px 0 0;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      padding-bottom:10px;
+      font-weight:700;
+      letter-spacing:0.06em;
+      font-size:16px;
+    }
+    .needle{
+      position:absolute;
+      width:4px;
+      height:94%;
+      left:50%;
+      bottom:4px;
+      transform-origin:bottom center;
+      background:linear-gradient(180deg,#fff,#ff4b6a);
+      box-shadow:0 0 10px rgba(255,255,255,0.85);
+      z-index:3;
+    }
+    .gauge-inner{z-index:2;}
+    .gauge-hub{
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#fff;
+      box-shadow:0 0 8px rgba(255,255,255,0.9);
+      left:50%;
+      bottom:0px;
+      transform:translateX(-50%);
+      z-index:4;
+    }
+
+    .pills{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--pill);
+      font-size:12px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      color:var(--muted);
+    }
+    .pill span.value{
+      color:var(--text);
+      font-weight:600;
+      min-width:42px;
+      text-align:right;
+    }
+    .pill.low span.dot{width:8px;height:8px;border-radius:999px;background:var(--low);}
+    .pill.medium span.dot{width:8px;height:8px;border-radius:999px;background:var(--medium);}
+    .pill.high span.dot{width:8px;height:8px;border-radius:999px;background:var(--high);}
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.1em;
+      color:var(--muted);
+    }
+
+    /* Suggestions */
+    .side-card{
+      background:var(--card);
+      border-radius:20px;
+      border:1px solid var(--border);
+      padding:16px 18px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .side-card ul{
+      padding-left:18px;
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* History table */
+    .history{
+      margin-top:22px;
+      background:var(--card-soft);
+      border-radius:18px;
+      border:1px solid var(--border);
+      padding:14px 16px 10px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
+    thead{color:#c2c5dd;}
+    th,td{
+      padding:6px 4px;
+      border-bottom:1px solid rgba(255,255,255,0.04);
+      text-align:center;
+    }
+    tr:last-child td{border-bottom:none;}
+    .tag-chip{
+      display:inline-flex;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:600;
+    }
+    .tag-low{background:rgba(32,213,122,0.12);color:var(--low);}
+    .tag-medium{background:rgba(255,176,32,0.12);color:var(--medium);}
+    .tag-high{background:rgba(255,75,106,0.12);color:var(--high);}
+
+    .footer-actions{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:none;
+      border-radius:999px;
+      padding:10px 16px;
+      font-weight:600;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn-primary{
+      background:linear-gradient(120deg,#ff3d71,#c93aff);
+      color:white;
+    }
+    .btn-ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.2);
+      color:var(--muted);
+    }
+
+    .hint{font-size:12px;color:var(--muted);margin-top:4px;min-height:14px;}
+
+    /* PDF/Print için sade görünüm */
+    @media print {
+      body{
+        background:#fff !important;
+        color:#000 !important;
+        padding:0;
+      }
+      .shell{
+        box-shadow:none !important;
+        border:1px solid #ddd !important;
+        background:#fff !important;
+        max-width:100% !important;
+        border-radius:0;
+      }
+      .gauge-card,
+      .side-card,
+      .history{
+        background:#fff !important;
+        border:1px solid #ddd !important;
+        color:#000 !important;
+      }
+      .pills .pill,
+      .tag-chip{
+        background:#f3f4f6 !important;
+        color:#000 !important;
+      }
+      .btn,
+      .footer-actions,
+      .print-hide{
+        display:none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+    <div>
+      <h1>Results</h1>
+      <p class="muted" id="subtitle">No prediction yet. Fill in the risk form first.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="window.location.href='/dashboard2/';">
+        Quit smoking likelihood
+      </button>
+      <button class="btn btn-ghost" id="logoutBtnTop" title="Log out">
+      Log out
+      </button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- Left: Gauge + probabilities -->
+    <section class="gauge-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;">
+        <div class="tag">
+          <span style="width:6px;height:6px;border-radius:999px;background:#56ccf2;"></span>
+          Last prediction
+        </div>
+        <div id="risk-level-label" style="font-weight:700;font-size:14px;color:var(--muted);">
+          –
+        </div>
+      </div>
+
+      <div class="gauge-wrap">
+        <div style="position:relative;">
+          <div class="gauge">
+            <div id="needle" class="needle" style="transform:rotate(0deg);"></div>
+            <div class="gauge-hub"></div>
+            <div class="gauge-inner">
+              <span id="gauge-text">–</span>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:180px;">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">Probabilities</div>
+          <div class="pills">
+            <div class="pill low">
+              <span class="dot"></span>
+              <span>LOW</span>
+              <span class="value" id="p-low">-</span>
+            </div>
+            <div class="pill medium">
+              <span class="dot"></span>
+              <span>MEDIUM</span>
+              <span class="value" id="p-medium">-</span>
+            </div>
+            <div class="pill high">
+              <span class="dot"></span>
+              <span>HIGH</span>
+              <span class="value" id="p-high">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <button class="btn btn-primary" onclick="window.location.href='/risk-form/';">
+          New prediction
+        </button>
+        <button class="btn btn-ghost" onclick="window.print();">
+          PDF / Print
+        </button>
+      </div>
+      <div class="hint" id="dashboard-hint"></div>
+    </section>
+
+    <!-- Right: Suggestions -->
+    <aside class="side-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="margin:0;font-size:16px;">Suggestions</h3>
+        <span id="suggest-title" class="muted" style="font-size:12px;">Waiting…</span>
+      </div>
+      <ul id="suggest-list">
+        <li>No prediction yet. After you submit the form you'll see personalised suggestions here.</li>
+      </ul>
+    </aside>
+  </div>
+
+  <!-- History -->
+  <section class="history">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:13px;color:var(--muted);">Last 50 records</div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+        <tr>
+          <th>Date/Time</th>
+          <th>Risk</th>
+          <th>Age</th>
+          <th>Smoking</th>
+          <th>Air pollution</th>
+          <th>Fatigue</th>
+          <th>Passive smoking</th>
+        </tr>
+        </thead>
+        <tbody id="history-body">
+        <tr><td colspan="7">No records found.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Risk level -> needle angle
+  function levelToAngle(level){
+    const lvl = (level||"").toString().toUpperCase();
+    switch(lvl){
+      case "LOW": return -70;
+      case "MEDIUM": return 0;
+      case "HIGH": return 70;
+      default: return 0;
+    }
+  }
+
+  function formatPercent(x){
+    if (typeof x !== "number") return "-";
+    return (x * 100).toFixed(1) + "%";
+  }
+
+  function buildSuggestions(inputs, level){
+    const tips = [];
+    const v = inputs || {};
+    const hi = (k,t=7)=> (parseFloat(v[k]||0) >= t);
+    const mid = (k,lo=4,hiVal=6)=> {
+      const val = parseFloat(v[k]||0);
+      return val >= lo && val < hiVal;
+    };
+
+    if(level === "HIGH"){
+      tips.push("High risk detected. Urgent medical evaluation, lung imaging and close follow-up are needed.");
+      tips.push("Stop smoking and alcohol immediately; get specialist advice for oxygenation and lung function tests.");
+      tips.push("Avoid heavy exercise for the first 2 weeks; go to emergency if shortness of breath or cough worsens.");
+    } else if(level === "MEDIUM"){
+      tips.push("Medium risk present. See a specialist soon; plan a check-up within 1–3 months.");
+      tips.push("Lifestyle changes: sleep, diet and light exercise can help reduce risk.");
+      tips.push("Keep a daily trigger log: record smoking/alcohol, environment and symptoms.");
+    } else {
+      tips.push("Risk is low. One check-up per year is enough; keep living healthily.");
+      tips.push("Keep current habits; monitor triggers and don’t skip regular check-ups.");
+      tips.push("Maintain moderate outdoor walking, vegetable-rich diet and adequate hydration.");
+    }
+
+    if(hi("smoking",7)) tips.push("Smoking: Cut daily use by 50%, get under 10 cigarettes; book support for nicotine replacement.");
+    else if(hi("smoking",5)) tips.push("Smoking: Make a step-down plan; add water, short walk or breathing at trigger times.");
+    else tips.push("Smoking: Low level; keep it that way, log triggers and watch for increases.");
+
+    if(hi("alcohol_use",7)) tips.push("Alcohol: Strict limit for 2 weeks, avoid binge; stay under 1–2 units per week.");
+    else if(hi("alcohol_use",5)) tips.push("Alcohol: Reduce gradually to under 3–4 units/week; have alcohol-free days to reduce smoking triggers.");
+    else if(mid("alcohol_use",3,5)) tips.push("Alcohol: Moderate; cut to minimum for 2 weeks when quitting, note social triggers.");
+    else tips.push("Alcohol: Low; keep it that way when quitting, watch triggers in social settings.");
+
+    if(hi("air_pollution",6)) tips.push("Air pollution: Use mask/filter when pollution is high; prefer air purifier indoors; time exercise for cleaner air.");
+    if(hi("passive_smoker",6)) tips.push("Passive smoking: Strictly limit smoky places, improve ventilation; stay outdoors and away from smoking areas when possible.");
+    else tips.push("Passive smoking: Prefer clean-air spaces; increase ventilation indoors.");
+
+    if(hi("dust_allergy",6) || hi("occupational_hazards",6))
+      tips.push("Dust/occupational exposure: Use PPE (mask/HEPA), get safety advice; reduce exposure time and take breaks.");
+    if(hi("genetic_risk",6))
+      tips.push("Genetic risk: Set up a periodic screening plan; schedule regular follow-up with respiratory/oncology.");
+    else tips.push("Even without family history, keep up yearly check-ups and basic screening.");
+
+    if(hi("wheezing",6))
+      tips.push("Wheezing: Lung function test and respiratory check; consider medication review.");
+    if(hi("chronic_lung_disease",6))
+      tips.push("Chronic lung disease: Stick to medication; don’t miss follow-ups; note attack triggers.");
+
+    if(hi("fatigue",7))
+      tips.push("Fatigue: Improve sleep, stress and diet; consider internal medicine check and blood work.");
+    else if(mid("fatigue",5,7))
+      tips.push("Moderate fatigue: 20–30 min light exercise daily, regular sleep; try limiting caffeine/energy drinks.");
+    else tips.push("Low fatigue: Keep your routine; keep hydration and sleep stable.");
+
+    return tips;
+  }
+
+  function applyLastResult(data){
+    const level = (data.risk_level || "LOW").toString().toUpperCase();
+    const probs = data.probabilities || {};
+    const inputs = data.inputs || {};
+    const suggestions = Array.isArray(data.suggestions) && data.suggestions.length > 0
+      ? data.suggestions
+      : buildSuggestions(inputs, level);
+
+    document.getElementById("subtitle").textContent =
+      "Your latest prediction and probability distribution are shown below.";
+    document.getElementById("risk-level-label").textContent = "Risk level: " + level;
+    document.getElementById("gauge-text").textContent = level;
+    document.getElementById("needle").style.transform =
+      "rotate(" + levelToAngle(level) + "deg)";
+
+    document.getElementById("p-low").textContent    = formatPercent(probs.low);
+    document.getElementById("p-medium").textContent = formatPercent(probs.medium);
+    document.getElementById("p-high").textContent   = formatPercent(probs.high);
+
+    const ul = document.getElementById("suggest-list");
+    ul.innerHTML = "";
+    if (suggestions.length === 0){
+      ul.innerHTML = "<li>No specific suggestions for this risk level.</li>";
+    } else {
+      suggestions.forEach((s) => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        ul.appendChild(li);
+      });
+    }
+    document.getElementById("suggest-title").textContent = "Based on last prediction";
+  }
+
+  async function loadHistory(){
+    try{
+      const res = await fetch("/api/history/");
+      const data = await res.json();
+      const tbody = document.getElementById("history-body");
+      tbody.innerHTML = "";
+
+      if (!res.ok || !Array.isArray(data) || data.length === 0){
+        tbody.innerHTML = "<tr><td colspan='7'>No records found.</td></tr>";
+        return [];
+      }
+
+      data.forEach(rec => {
+        const tr = document.createElement("tr");
+
+        // created_at iso -> kısa format
+        const d = rec.created_at ? new Date(rec.created_at) : null;
+        const when = d ? d.toLocaleString("en-GB") : "-";
+
+        const tdDate = document.createElement("td");
+        tdDate.textContent = when;
+
+        const tdRisk = document.createElement("td");
+        const span = document.createElement("span");
+        const rl = (rec.predicted_risk_level || "LOW").toString().toUpperCase();
+        span.textContent = rl;
+        span.classList.add("tag-chip");
+        if (rl === "LOW") span.classList.add("tag-low");
+        else if (rl === "MEDIUM") span.classList.add("tag-medium");
+        else span.classList.add("tag-high");
+        tdRisk.appendChild(span);
+
+        const tdAge = document.createElement("td");
+        tdAge.textContent = rec.age ?? "-";
+
+        const tdSmk = document.createElement("td");
+        tdSmk.textContent = rec.smoking ?? "-";
+
+        const tdAir = document.createElement("td");
+        tdAir.textContent = rec.air_pollution ?? "-";
+
+        const tdFatigue = document.createElement("td");
+        tdFatigue.textContent = rec.fatigue ?? "-";
+
+        const tdPassive = document.createElement("td");
+        tdPassive.textContent = rec.passive_smoker ?? "-";
+
+        tr.appendChild(tdDate);
+        tr.appendChild(tdRisk);
+        tr.appendChild(tdAge);
+        tr.appendChild(tdSmk);
+        tr.appendChild(tdAir);
+        tr.appendChild(tdFatigue);
+        tr.appendChild(tdPassive);
+
+        tbody.appendChild(tr);
+      });
+      return data;
+    }catch(err){
+      console.error(err);
+      document.getElementById("history-body").innerHTML =
+        "<tr><td colspan='7'>Error loading history.</td></tr>";
+      return [];
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1) Son sonucu sessionStorage'dan al
+    const raw = sessionStorage.getItem("lastRiskResult");
+    if (raw){
+      try{
+        const obj = JSON.parse(raw);
+        applyLastResult(obj);
+      }catch(e){
+        console.error("lastRiskResult parse error:", e);
+      }
+    }
+
+    // 2) Geçmiş kayıtları çek
+    loadHistory().then((data)=>{
+      if(!raw && Array.isArray(data) && data.length > 0){
+        // Session yoksa en son kaydı uygula
+        applyLastResult(data[0]);
+      }
+    }).catch(()=>{});
+
+    const logoutBtnTop = document.getElementById("logoutBtnTop");
+    if (logoutBtnTop) {
+      logoutBtnTop.onclick = () => {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.location.assign("/logout/");
+      };
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LungRisk AI | Risk Form</title>
+  <style>
+    :root {
+      --bg:#0c0c14;
+      --panel:rgba(255,255,255,0.06);
+      --border:rgba(255,255,255,0.08);
+      --text:#e9ecf5;
+      --muted:#9aa0b5;
+      --primary:#c93aff;
+      --accent:#ff3d71;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:'Inter',system-ui,-apple-system,sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,0,90,0.15), transparent 30%),
+        radial-gradient(circle at 80% 0%, rgba(111,0,255,0.18), transparent 30%),
+        var(--bg);
+      color:var(--text);
+      padding:18px;
+    }
+    .card{
+      max-width:900px;
+      margin:0 auto;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.45);
+      backdrop-filter:blur(12px);
+    }
+    h1,h2,h3{margin:0 0 10px;}
+    .muted{color:var(--muted);}
+    label{
+      display:block;
+      margin-bottom:6px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    input[type=number]{
+      width:100%;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.04);
+      color:var(--text);
+    }
+    select{
+      width:100%;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.04);
+      color:var(--text);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:12px;
+    }
+    .slider-row{
+      display:grid;
+      grid-template-columns:1fr 120px 80px;
+      gap:8px;
+      align-items:center;
+    }
+    input[type=range]{width:100%;}
+    .btn{
+      padding:12px 14px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(120deg,var(--accent),var(--primary));
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .btn:hover{opacity:0.96;}
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .hint{color:var(--muted);font-size:13px;min-height:18px;}
+    @media(max-width:720px){
+      .slider-row{grid-template-columns:1fr;}
+    }
+    /* Select kapalı hali */
+    select {
+      background-color: rgba(255,255,255,0.06);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* Açılan listedeki tüm seçenekler */
+    select option {
+      background-color: #ffffff;
+      color: #000000;
+      font-weight: 400;
+    }
+
+    /* ✅ NORMALDE SADECE SEÇİLİ OLAN MAVİ */
+    select:not(:hover) option:checked {
+      background-color: #0d6efd;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* ✅ SADECE MOUSE ÜZERİNDE OLAN MAVİ */
+    select:hover option:hover {
+      background-color: #0d6efd;
+      color: #ffffff;
+    }
+
+    /* ✅ Mouse başka bir option üzerindeyken seçili olan BEYAZA DÖNER */
+    select:hover option:checked:not(:hover) {
+      background-color: #ffffff;
+      color: #000000;
+      font-weight: 400;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Lung Cancer Risk Form</h1>
+    <p class="muted">
+      Fill in the form with values 1–10; we'll calculate the result instantly.
+    </p>
+
+    <div class="grid">
+      <div>
+        <label>Age</label>
+        <input id="age" type="number" min="14" max="90" value="40">
+      </div>
+      <div>
+        <label>Gender</label>
+        <select id="gender">
+          <option value="1">Male</option>
+          <option value="2">Female</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:12px;">
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Air pollution</div>
+          <div class="muted" style="font-size:12px;">
+            1 = clean air, 10 = heavy pollution
+          </div>
+        </div>
+        <input id="air_pollution" type="range" min="1" max="10" value="5"
+               oninput="document.getElementById('air_pollution-val').value=this.value">
+        <input id="air_pollution-val" type="number" min="1" max="10" value="5"
+               oninput="document.getElementById('air_pollution').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Dust allergy</div>
+          <div class="muted" style="font-size:12px;">
+            1 = none/very low, 10 = very severe
+          </div>
+        </div>
+        <input id="dust_allergy" type="range" min="1" max="10" value="5"
+               oninput="document.getElementById('dust_allergy-val').value=this.value">
+        <input id="dust_allergy-val" type="number" min="1" max="10" value="5"
+               oninput="document.getElementById('dust_allergy').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Occupational risk</div>
+          <div class="muted" style="font-size:12px;">
+            1 = no risk, 10 = high risk (mining, chemicals, etc.)
+          </div>
+        </div>
+        <input id="occupational_hazards" type="range" min="1" max="10" value="5"
+               oninput="document.getElementById('occupational_hazards-val').value=this.value">
+        <input id="occupational_hazards-val" type="number" min="1" max="10" value="5"
+               oninput="document.getElementById('occupational_hazards').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Genetic risk</div>
+          <div class="muted" style="font-size:12px;">
+            1 = no family history, 10 = strong family history
+          </div>
+        </div>
+        <input id="genetic_risk" type="range" min="1" max="10" value="5"
+               oninput="document.getElementById('genetic_risk-val').value=this.value">
+        <input id="genetic_risk-val" type="number" min="1" max="10" value="5"
+               oninput="document.getElementById('genetic_risk').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Wheezing</div>
+          <div class="muted" style="font-size:12px;">
+            1 = none, 10 = very frequent / severe
+          </div>
+        </div>
+        <input id="wheezing" type="range" min="1" max="10" value="5"
+               oninput="document.getElementById('wheezing-val').value=this.value">
+        <input id="wheezing-val" type="number" min="1" max="10" value="5"
+               oninput="document.getElementById('wheezing').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Fatigue</div>
+          <div class="muted" style="font-size:12px;">
+            1 = none, 10 = affects daily life
+          </div>
+        </div>
+        <input id="fatigue" type="range" min="1" max="10" value="5"
+               oninput="document.getElementById('fatigue-val').value=this.value">
+        <input id="fatigue-val" type="number" min="1" max="10" value="5"
+               oninput="document.getElementById('fatigue').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Alcohol use</div>
+          <div class="muted" style="font-size:12px;">
+            1 = none / once a month, 10 = 3+ units daily (high)
+          </div>
+        </div>
+        <input id="alcohol_use" type="range" min="1" max="10" value="3"
+               oninput="document.getElementById('alcohol_use-val').value=this.value">
+        <input id="alcohol_use-val" type="number" min="1" max="10" value="3"
+               oninput="document.getElementById('alcohol_use').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Chronic lung disease</div>
+          <div class="muted" style="font-size:12px;">
+            1 = none, 10 = very severe (COPD, fibrosis, etc.)
+          </div>
+        </div>
+        <input id="chronic_lung_disease" type="range" min="1" max="10" value="1"
+               oninput="document.getElementById('chronic_lung_disease-val').value=this.value">
+        <input id="chronic_lung_disease-val" type="number" min="1" max="10" value="1"
+               oninput="document.getElementById('chronic_lung_disease').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Smoking</div>
+          <div class="muted" style="font-size:12px;">
+            1 = non-smoker, 10 = 2+ packs/day (5 ≈ 5–10 cigarettes/day)
+          </div>
+        </div>
+        <input id="smoking" type="range" min="1" max="10" value="1"
+               oninput="document.getElementById('smoking-val').value=this.value">
+        <input id="smoking-val" type="number" min="1" max="10" value="1"
+               oninput="document.getElementById('smoking').value=this.value">
+      </div>
+
+      <div class="slider-row">
+        <div>
+          <div style="font-weight:600;color:var(--text);">Passive smoking</div>
+          <div class="muted" style="font-size:12px;">
+            1 = no exposure, 10 = constant heavy smoke (5 = occasional)
+          </div>
+        </div>
+        <input id="passive_smoker" type="range" min="1" max="10" value="2"
+               oninput="document.getElementById('passive_smoker-val').value=this.value">
+        <input id="passive_smoker-val" type="number" min="1" max="10" value="2"
+               oninput="document.getElementById('passive_smoker').value=this.value">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <button class="btn" id="submitBtn" type="button">Calculate risk</button>
+      <button class="btn" type="button" onclick="window.location.href='/dashboard/';">Back to dashboard</button>
+      <div class="hint" id="hint"></div>
+    </div>
+  </div>
+
+  <script>
+    // Yardımcı: değeri verilen aralığa kıs
+    function clamp(val, min, max){
+      const v = parseFloat(val || 0);
+      return Math.max(min, Math.min(max, v));
+    }
+
+    // 1-10 aralığını modelin beklediği aralığa (örn 1-8) ölçekle
+    function mapToRange(v, srcMax, dstMax){
+      const c = clamp(v, 1, srcMax);
+      if(srcMax === dstMax) return c;
+      const ratio = (c - 1) / (srcMax - 1);
+      return Math.round(1 + ratio * (dstMax - 1));
+    }
+
+    async function submitForm(){
+  
+      const raw = {
+        age: parseInt(document.getElementById("age").value || 0),
+        gender: parseInt(document.getElementById("gender").value || 1),
+        air_pollution: parseInt(document.getElementById("air_pollution").value),
+        dust_allergy: parseInt(document.getElementById("dust_allergy").value),
+        occupational_hazards: parseInt(document.getElementById("occupational_hazards").value),
+        genetic_risk: parseInt(document.getElementById("genetic_risk").value),
+        wheezing: parseInt(document.getElementById("wheezing").value),
+        fatigue: parseInt(document.getElementById("fatigue").value),
+        alcohol_use: parseInt(document.getElementById("alcohol_use").value),
+        chronic_lung_disease: parseInt(document.getElementById("chronic_lung_disease").value),
+        smoking: parseInt(document.getElementById("smoking").value),
+        passive_smoker: parseInt(document.getElementById("passive_smoker").value),
+      };
+  
+      const payload = {
+        age: raw.age,
+        gender: raw.gender,
+        air_pollution:        mapToRange(raw.air_pollution,        10, 8),
+        dust_allergy:         mapToRange(raw.dust_allergy,         10, 8),
+        occupational_hazards: mapToRange(raw.occupational_hazards, 10, 8),
+        genetic_risk:         mapToRange(raw.genetic_risk,         10, 7),
+        wheezing:             mapToRange(raw.wheezing,             10, 8),
+        fatigue:              mapToRange(raw.fatigue,              10, 9),
+        alcohol_use:          mapToRange(raw.alcohol_use,          10, 8),
+        chronic_lung_disease: mapToRange(raw.chronic_lung_disease, 10, 7),
+        smoking:              mapToRange(raw.smoking,              10, 8),
+        passive_smoker:       mapToRange(raw.passive_smoker,       10, 8),
+      };
+  
+      const hint = document.getElementById("hint");
+      hint.textContent = "Calculating...";
+  
+      try{
+        const res = await fetch("/api/risk-form/", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+  
+        const data = await res.json();
+  
+        if(res.ok){
+          sessionStorage.setItem("lastRiskResult", JSON.stringify(data));
+          // Başarıda dashboard'a yönlendir
+          window.location.assign("/dashboard/");
+        } else {
+          const msg = `Error: ${res.status} - ${data.detail || data.error || JSON.stringify(data)}`;
+          hint.textContent = msg;
+          console.error(msg);
+          alert(msg);
+        }
+  
+      } catch(err){
+        console.error(err);
+        hint.textContent = "Could not connect to server.";
+        alert("Could not connect to server.");
+      }
+    }
+  
+    document.getElementById("submitBtn").onclick = submitForm;
+  </script>
+  
+</body>
+</html>
