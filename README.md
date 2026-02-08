@@ -1,4 +1,4 @@
-<img width="789" height="587" alt="cancern2" src="https://github.com/user-attachments/assets/99b21716-d3bb-4595-abaf-7982f9729d99" /># LungRisk & QuitSmoking AI
+# LungRisk & QuitSmoking AI
 
 A dual-purpose web application that assesses **lung cancer risk** and **quit-smoking likelihood** using machine learning models. Users can sign up, submit health and lifestyle data, and receive instant risk analysis with personalized suggestions.
 
